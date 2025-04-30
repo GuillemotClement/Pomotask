@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "API_Pomotask",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
