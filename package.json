@@ -1,0 +1,32 @@
+{
+  "name": "pomotask",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "tsc && node dist/index.js",
+    "dev": "tsc -w & nodemon -q -w dist dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GuillemotClement/Pomotask.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GuillemotClement/Pomotask/issues"
+  },
+  "homepage": "https://github.com/GuillemotClement/Pomotask#readme",
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.15.3",
+    "nodemon": "^3.1.10",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
