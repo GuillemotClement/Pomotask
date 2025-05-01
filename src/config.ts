@@ -3,6 +3,7 @@ import { MigrationConfig } from "drizzle-orm/migrator";
 type Config = {
   api: APIConfig;
   db: DBConfig;
+  jwt: JWTConfig;
 };
 
 // configuration de l'api
@@ -16,6 +17,12 @@ type APIConfig = {
 type DBConfig = {
   url: string;
   migrationConfig: MigrationConfig;
+};
+
+type JWTConfig = {
+  defaultDuration: number;
+  secret: string;
+  issuer: string;
 };
 
 process.loadEnvFile(); // chargement des variables d'environnement.
@@ -46,5 +53,10 @@ export const config = {
   db: {
     url: envOrThrow("DB_URL"),
     migrationConfig: migrationConfig,
+  },
+  jwt: {
+    defaultDuration: 60 * 60, // 1 hour in second
+    secret: envOrThrow("JWT_SECRET"),
+    issuer: "pomotask",
   },
 };

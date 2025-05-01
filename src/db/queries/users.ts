@@ -10,6 +10,7 @@ type CreateUser = {
 };
 
 type UserByUsername = {
+  id: string;
   password: string;
 };
 
@@ -39,7 +40,7 @@ export async function getListUser() {
 
 export async function getUserByUsername(username: string) {
   const [result] = await db.execute<UserByUsername>(
-    sql`SELECT password FROM ${users} WHERE ${users.username} = ${username}`
+    sql`SELECT id, password FROM ${users} WHERE ${users.username} = ${username}`
   );
   return result;
 }
