@@ -1,4 +1,17 @@
 services:
+
+  front:
+    build: ./front        # Indique à Docker de chercher le Dockerfile dans le dossier actuel
+    container_name: bun-front
+    restart: unless-stopped
+    ports:
+      - "5173:5173"  # [Port ordi]:[Port conteneur]
+    environment:
+      - BACKEND_URL=http://localhost:3000
+    depends_on:
+      db:
+        condition: service_healthy # Attend que le healthcheck de la DB soit OK
+
   db:
     image: postgres:17-alpine
     restart: unless-stopped
