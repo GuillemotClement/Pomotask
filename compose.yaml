@@ -7,10 +7,24 @@ services:
     ports:
       - "5173:5173"  # [Port ordi]:[Port conteneur]
     environment:
-      - BACKEND_URL=http://localhost:3000
+      - BACKEND_URL=http://api:3000
     depends_on:
       db:
         condition: service_healthy # Attend que le healthcheck de la DB soit OK
+
+  api:
+    build: ./api
+    container_name: bun-api
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      - BETTER_AUTH_SECRET=11pFCuW9YKg7oJ8CFEv7iUwMXaoRKz4U
+      - BETTER_AUTH_URL=http://api:3000 # Base URL of your app
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/todobangbang
+    depends_on:
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:17-alpine
