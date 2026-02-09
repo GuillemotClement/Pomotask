@@ -4,6 +4,7 @@ import {
 	createRouter,
 } from "@tanstack/react-router";
 import RootLayout from "../layouts/RootLayout";
+
 import HomePage from "../pages/HomePage";
 import NotFoundPage from "../pages/NotFoundPage";
 import LoginPage from "../pages/Auth/LoginPage";
