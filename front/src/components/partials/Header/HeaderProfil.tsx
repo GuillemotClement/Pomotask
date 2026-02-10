@@ -1,6 +1,23 @@
 import { Link } from "@tanstack/react-router";
+import { authClient } from "../../../libs/auth-client";
 
-export default function HeaderProfil() {
+type User = typeof authClient.$Infer.Session.user;
+
+type HeaderProfilProps = {
+	user: User;
+};
+
+export default function HeaderProfil({ user }: HeaderProfilProps) {
+	const handleLogout = async () => {
+		await authClient.signOut({
+			fetchOptions: {
+				onSuccess: () => {
+					window.location.href = "/";
+				},
+			},
+		});
+	};
+
 	return (
 		<div className="dropdown dropdown-end">
 			<button
@@ -8,11 +25,8 @@ export default function HeaderProfil() {
 				tabIndex={0}
 				className="btn btn-ghost btn-circle avatar"
 			>
-				<div className="w-10 rounded-full">
-					<img
-						alt="Tailwind CSS Navbar component"
-						src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-					/>
+				<div className="w-10 rounded-full bg-gray-300 flex items-center">
+					{user.name}
 				</div>
 			</button>
 			<ul
@@ -25,7 +39,9 @@ export default function HeaderProfil() {
 					</Link>
 				</li>
 				<li>
-					<button type="button">Logout</button>
+					<button type="button" onClick={handleLogout}>
+						Logout
+					</button>
 				</li>
 			</ul>
 		</div>
