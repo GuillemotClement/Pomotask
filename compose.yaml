@@ -6,6 +6,9 @@ services:
     restart: unless-stopped
     ports:
       - "5173:5173"  # [Port ordi]:[Port conteneur]
+    volumes:
+      - ./front:/app
+      - /app/node_modules
     environment:
       - BACKEND_URL=http://api:3000
     depends_on:
@@ -18,6 +21,9 @@ services:
     restart: unless-stopped
     ports:
       - '3000:3000'
+    volumes:
+      - ./api:/app
+      - /app/node_modules
     environment:
       - BETTER_AUTH_SECRET=11pFCuW9YKg7oJ8CFEv7iUwMXaoRKz4U
       - BETTER_AUTH_URL=http://api:3000 # Base URL of your app

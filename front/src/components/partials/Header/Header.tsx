@@ -1,16 +1,12 @@
-import { createAuthClient } from "better-auth/react";
 import HeaderAction from "./HeaderAction";
 import HeaderProfil from "./HeaderProfil";
 import { Link } from "@tanstack/react-router";
 import { Menu } from "lucide-react";
+import { authClient } from "../../../libs/auth-client";
 
-const { useSession } = createAuthClient();
+const { data: session } = await authClient.getSession();
 
 export default function Header() {
-	const { data } = useSession();
-
-	console.log(data?.user);
-
 	return (
 		<header className="navbar bg-base-100 shadow-sm">
 			<div className="navbar-start">
@@ -45,34 +41,40 @@ export default function Header() {
 					Pomotask
 				</Link>
 			</div>
-			<div className="navbar-center hidden lg:flex">
-				<ul className="menu menu-horizontal px-1">
-					<li>
-						<Link to="/">Projets</Link>
-					</li>
-					{/* <li>
-						<details>
-							<summary>Parent</summary>
-							<ul className="p-2 bg-base-100 w-40 z-1">
-								<li>
-									<a>Submenu 1</a>
+			{session?.user ? (
+				<div className="navbar-center hidden lg:flex">
+					<ul className="menu menu-horizontal px-1">
+						<li>
+							<Link to="/">Projets</Link>
+						</li>
+						{/* <li>
+									<details>
+										<summary>Parent</summary>
+										<ul className="p-2 bg-base-100 w-40 z-1">
+											<li>
+												<a>Submenu 1</a>
+											</li>
+											<li>
+												<a>Submenu 2</a>
+											</li>
+										</ul>
+									</details>
 								</li>
 								<li>
-									<a>Submenu 2</a>
-								</li>
-							</ul>
-						</details>
-					</li>
-					<li>
-						<a>Item 3</a>
-					</li> */}
-				</ul>
-			</div>
+									<a>Item 3</a>
+								</li> */}
+					</ul>
+				</div>
+			) : (
+				""
+			)}
 
 			<div className="navbar-end flex gap-x-4">
-				<HeaderAction />
-
-				<HeaderProfil />
+				{session?.user ? (
+					<HeaderProfil user={session.user} />
+				) : (
+					<HeaderAction />
+				)}
 			</div>
 		</header>
 	);
