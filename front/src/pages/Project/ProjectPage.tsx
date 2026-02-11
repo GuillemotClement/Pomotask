@@ -9,6 +9,7 @@ import {
 import { z } from "zod";
 import { api } from "../../libs/axios";
 import { useNavigate } from "@tanstack/react-router";
+import { Trash } from "lucide-react";
 
 // typage de la ressource Project
 type Project = {
@@ -134,7 +135,7 @@ export default function ProjectPage() {
 					className="text-red-500 hover:text-red-700 font-medium"
 					type="button"
 				>
-					{deleteMutation.isPending ? "..." : "Supprimez"}
+					<Trash />
 				</button>
 			),
 		}),
@@ -148,71 +149,75 @@ export default function ProjectPage() {
 	});
 
 	return (
-		<div className="border container mx-auto">
-			{mutationError && <div className="">Erreur serveur</div>}
+		<div className="border container mx-auto pt-10">
+			<form
+				className="w-200 mx-auto flex flex-col gap-y-5 py-6"
+				onSubmit={(e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					form.handleSubmit();
+				}}
+			>
+				<form.Field
+					name="title"
+					children={(field) => (
+						<div className="flex items-center input w-full">
+							<label htmlFor="name">Nom :</label>
+							<input
+								type="text"
+								id="name"
+								value={field.state.value}
+								onBlur={field.handleBlur}
+								onChange={(e) => field.handleChange(e.target.value)}
+							/>
+						</div>
+					)}
+				/>
 
-			<div className="">
-				<form
-					className="border"
-					onSubmit={(e) => {
-						e.preventDefault();
-						e.stopPropagation();
-						form.handleSubmit();
-					}}
-				>
-					<form.Field
-						name="title"
-						children={(field) => (
-							<div>
-								<input
-									type="text"
-									placeholder="Nom"
-									className="input"
-									value={field.state.value}
-									onBlur={field.handleBlur}
-									onChange={(e) => field.handleChange(e.target.value)}
-								/>
-							</div>
-						)}
-					/>
+				<form.Field
+					name="description"
+					children={(field) => (
+						<div className="flex flex-col gap-1 w-full p-2 textarea">
+							<label htmlFor="">Description :</label>
+							<textarea
+								className="w-full"
+								value={field.state.value}
+								onBlur={field.handleBlur}
+								onChange={(e) => field.handleChange(e.target.value)}
+							></textarea>
+						</div>
+					)}
+				/>
 
-					<form.Field
-						name="description"
-						children={(field) => (
-							<div>
-								<textarea
-									placeholder="Description"
-									className="input"
-									value={field.state.value}
-									onBlur={field.handleBlur}
-									onChange={(e) => field.handleChange(e.target.value)}
-								></textarea>
-							</div>
-						)}
-					/>
+				{mutationError && (
+					<div className="bg-red-500 font-bold italic">Erreur serveur</div>
+				)}
 
-					<form.Subscribe
-						selector={(state) => [state.canSubmit, state.isSubmitting]}
-						children={([canSubmit, isSubmitting]) => (
-							<div className="">
-								<button
-									type="button"
-									className="btn"
-									onClick={() => {
-										form.reset();
-									}}
-								>
-									Effacer
-								</button>
+				<form.Subscribe
+					selector={(state) => [state.canSubmit, state.isSubmitting]}
+					children={([canSubmit, isSubmitting]) => (
+						<div className="flex justify-center gap-x-5">
+							<button
+								type="button"
+								className="btn btn-neutral"
+								onClick={() => {
+									form.reset();
+								}}
+							>
+								Effacer
+							</button>
 
-								<button type="submit" disabled={!canSubmit} className="btn">
-									{isPending || isSubmitting ? "Envoie ..." : "Créer"}
-								</button>
-							</div>
-						)}
-					/>
-				</form>
-			</div>
+							<button
+								type="submit"
+								disabled={!canSubmit}
+								className="btn btn-primary"
+							>
+								{isPending || isSubmitting ? "Envoie ..." : "Créer"}
+							</button>
+						</div>
+					)}
+				/>
+			</form>
 			<div className="">
 				<h2>Mes projets</h2>
 				{isLoading && <p>Chargement des données ...</p>}

@@ -7,7 +7,6 @@ export default function RootLayout() {
 	return (
 		<div className="flex min-h-screen flex-col">
 			<Header />
-			Root Layout
 			<div className="flex-1">
 				<Outlet />
 				<TanStackRouterDevtools position="bottom-right" />
