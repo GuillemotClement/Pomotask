@@ -45,7 +45,7 @@ export default function Header() {
 				<div className="navbar-center hidden lg:flex">
 					<ul className="menu menu-horizontal px-1">
 						<li>
-							<Link to="/">Projets</Link>
+							<Link to="/projects">Projets</Link>
 						</li>
 						{/* <li>
 									<details>

@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/correctness/noChildrenProp: pas réussis à supprimer la règle biome */
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 // import FieldInfo from "../../../components/form/FieldInfo";

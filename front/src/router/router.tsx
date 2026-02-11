@@ -9,6 +9,8 @@ import HomePage from "../pages/HomePage";
 import NotFoundPage from "../pages/NotFoundPage";
 import LoginPage from "../pages/Auth/LoginPage";
 import RegisterPage from "../pages/Auth/RegisterPage";
+import ProjectPage from "../pages/Project/ProjectPage";
+import ProjectDetailComponent from "../pages/Project/ProjectDetailComponent";
 
 const rootRoute = createRootRoute({
 	component: RootLayout,
@@ -33,10 +35,24 @@ const registerRoute = createRoute({
 	component: RegisterPage,
 });
 
+const projectRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: "/projects",
+	component: ProjectPage,
+});
+
+export const projectDetailRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: "/projects/$projectId", // $ indique un paramètre dynamique
+	component: ProjectDetailComponent,
+});
+
 const routeTree = rootRoute.addChildren([
 	indexRoute,
 	loginRoute,
 	registerRoute,
+	projectRoute,
+	projectDetailRoute,
 ]);
 
 export const router = createRouter({
