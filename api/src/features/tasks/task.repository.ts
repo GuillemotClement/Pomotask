@@ -1,8 +1,6 @@
 import { eq } from "drizzle-orm";
 import { tableProject, tableStatusTask, tableTask } from "../../db/schema";
 import { db } from "../../lib/drizzle";
-import { TaskDetailResponse } from "../../types/task";
-import { updateUser } from "better-auth/api";
 
 export const taskRepository = {
   async getAll(userId: string) {

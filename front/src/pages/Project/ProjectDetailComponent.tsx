@@ -19,7 +19,7 @@ export default function ProjectDetailComponent() {
   if (isLoading) return <p>Chargement du projet {projectId}...</p>;
 
   return (
-    <div>
+    <div className="container mx-auto border">
       <h1>{project.title}</h1>
       <p>{project.description}</p>
     </div>
