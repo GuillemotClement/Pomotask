@@ -1,7 +1,0 @@
-:root {
-	--gray: oklch(96.7% 0.003 264.542);
-	--black: #0b1215;
-	--font-text: "Roboto", sans-serif;
-
-	--shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)
-}
