@@ -5,33 +5,7 @@ import { taskController } from "./task.controller";
 export const taskRouteur = new Hono();
 
 taskRouteur.get("/", authMiddleware, taskController.getAll);
-
-// app.post("/api/tasks", authMiddleware, async (c) => {
-//   const userId = getUserId(c);
-//   const body = await c.req.json();
-
-//   console.log(body);
-
-//   const payload = {
-//     title: body.title,
-//     description: body.description,
-//     userId: userId,
-//     projectId: body.projectId,
-//     branche: body.branche,
-//   };
-
-//   console.log(payload);
-
-//   try {
-//     const result = await db.insert(tableTask).values(payload);
-//     console.log("Insertion réussie");
-//     return c.json({ status: "OK", data: [result] }, 201);
-//   } catch (err) {
-//     console.error(err);
-//     return c.json({ error: err }, 500);
-//   }
-// });
-
+taskRouteur.get("/:taskId", authMiddleware, taskController.getById);
 // app.get("/api/tasks/:projectId", authMiddleware, async (c) => {
 //   const userId = getUserId(c);
 //   const projectId = Number(c.req.param("projectId"));
@@ -58,6 +32,32 @@ taskRouteur.get("/", authMiddleware, taskController.getAll);
 //       .orderBy(tableTask.updatedAt);
 
 //     return c.json({ tasks: result });
+//   } catch (err) {
+//     console.error(err);
+//     return c.json({ error: err }, 500);
+//   }
+// });
+
+// app.post("/api/tasks", authMiddleware, async (c) => {
+//   const userId = getUserId(c);
+//   const body = await c.req.json();
+
+//   console.log(body);
+
+//   const payload = {
+//     title: body.title,
+//     description: body.description,
+//     userId: userId,
+//     projectId: body.projectId,
+//     branche: body.branche,
+//   };
+
+//   console.log(payload);
+
+//   try {
+//     const result = await db.insert(tableTask).values(payload);
+//     console.log("Insertion réussie");
+//     return c.json({ status: "OK", data: [result] }, 201);
 //   } catch (err) {
 //     console.error(err);
 //     return c.json({ error: err }, 500);
