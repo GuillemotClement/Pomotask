@@ -34,4 +34,19 @@ export const taskController = {
       return c.json({ error: "Erreur interne" }, 500);
     }
   },
+
+  async update(c: Context) {
+    const payload = await c.req.json();
+    const taskId = Number(c.req.param("taskId"));
+    try {
+      const task = await taskService.update(taskId, payload);
+      return c.json({ task });
+    } catch (err) {
+      console.error(err);
+      if (err instanceof AppError) {
+        return c.json({ error: err.message }, err.statusCode);
+      }
+      return c.json({ error: "Erreur interne" }, 500);
+    }
+  },
 };

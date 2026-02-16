@@ -23,3 +23,9 @@ export class UnauthorizedError extends AppError {
     super(message, 401);
   }
 }
+
+export class UnprocessableEntity extends AppError {
+  constructor(message: string = "cannot be processed") {
+    super(message, 422);
+  }
+}

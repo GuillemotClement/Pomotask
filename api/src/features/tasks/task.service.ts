@@ -1,5 +1,9 @@
-import { NotFoundError } from "../../core/errors";
-import { TaskDetailResponse } from "../../types/task";
+import { NotFoundError, UnprocessableEntity } from "../../core/errors";
+import type {
+  Task,
+  TaskDetailResponse,
+  UpdateTaskPayload,
+} from "../../types/task";
 import { taskRepository } from "./task.repository";
 
 export const taskService = {
@@ -28,5 +32,30 @@ export const taskService = {
     };
 
     return data;
+  },
+
+  async update(taskId: number, payload: UpdateTaskPayload) {
+    const isValidTask = await taskService.getById(taskId);
+    if (!isValidTask) {
+      throw new NotFoundError();
+    }
+
+    const result = await taskRepository.update(payload);
+    if (!result) {
+      throw new UnprocessableEntity();
+    }
+
+    const response: Task = {
+      id: result.id,
+      title: result.title,
+      description: result.description,
+      createdAt: result.createdAt.toISOString(),
+      updatedAt: result.updatedAt.toISOString(),
+      statusId: result.statusId,
+      branche: result.branche || null,
+      projectId: result.projectId || null,
+    };
+
+    return response;
   },
 };

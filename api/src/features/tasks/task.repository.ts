@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { tableProject, tableStatusTask, tableTask } from "../../db/schema";
 import { db } from "../../lib/drizzle";
+import type { UpdateTaskPayload } from "../../types/task";
 
 export const taskRepository = {
   async getAll(userId: string) {
@@ -44,6 +45,22 @@ export const taskRepository = {
       .limit(1);
 
     // on retourne la ligne ou null => le service gère la transformation et cas null
+    return row || null;
+  },
+
+  async update(data: UpdateTaskPayload) {
+    const [row] = await db
+      .update(tableTask)
+      .set({
+        title: data.title,
+        branche: data.branche,
+        description: data.description,
+        projectId: data.projectId,
+        statusId: data.statusId,
+      })
+      .where(eq(tableTask.id, data.id))
+      .returning();
+
     return row || null;
   },
 };
