@@ -58,4 +58,22 @@ export const taskService = {
 
     return response;
   },
+
+  async create(userId: string, payload) {
+    const data = {
+      userId,
+      ...payload,
+    };
+
+    const response = await taskRepository.create(data);
+    if (!response) {
+      throw new Error("Faled to insert new task");
+    }
+
+    return response;
+  },
+
+  async delete(taskId: number) {
+    await taskRepository.delete(taskId);
+  },
 };

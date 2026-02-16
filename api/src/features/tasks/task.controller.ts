@@ -49,4 +49,33 @@ export const taskController = {
       return c.json({ error: "Erreur interne" }, 500);
     }
   },
+
+  async create(c: Context) {
+    const payload = await c.req.json();
+    const userId = getUserId(c);
+
+    try {
+      const task = await taskService.create(userId, payload);
+      return c.json({ task }, 201);
+    } catch (err) {
+      if (err instanceof AppError) {
+        return c.json({ error: err.message }, err.statusCode);
+      }
+      return c.json({ error: "Erreur interne" }, 500);
+    }
+  },
+
+  async delete(c: Context) {
+    const taskId = Number(c.req.param("taskId"));
+
+    try {
+      await taskService.delete(taskId);
+      return c.json({ status: "OK" }, 200);
+    } catch (err) {
+      if (err instanceof AppError) {
+        return c.json({ error: err.message }, err.statusCode);
+      }
+      return c.json({ error: "Erreur interne" }, 500);
+    }
+  },
 };

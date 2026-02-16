@@ -63,4 +63,14 @@ export const taskRepository = {
 
     return row || null;
   },
+
+  async create(data) {
+    const [row] = await db.insert(tableTask).values(data).returning();
+
+    return row || null;
+  },
+
+  async delete(taskId: number) {
+    await db.delete(tableTask).where(eq(tableTask.id, taskId));
+  },
 };

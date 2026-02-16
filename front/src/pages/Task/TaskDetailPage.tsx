@@ -2,6 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../../libs/axios";
 import { taskDetailRoute } from "../../router/router";
 import type { Task, TaskDetailResponse } from "../../types/task";
+import StatusBadge from "./components/StatusBadge";
+import DisplayBranche from "./components/DisplayBranche";
+import DisplayProject from "./components/DisplayProject";
+import DisplayDescription from "./components/DisplayDescription";
+import TaskTitle from "./components/TaskTitle";
 
 export default function TaskDetailPage() {
   const { taskId } = taskDetailRoute.useParams();
@@ -9,10 +14,8 @@ export default function TaskDetailPage() {
   const {
     data: task,
     isLoading,
-    error, // contient l'objet error retourner par le backend => permet d'afficher le message d'erreur serveur
-    isError, // bolean qui indique si la requête a réussis
+    isError,
   } = useQuery<Task>({
-    // avec taskId on rend le cache unique pour cette task
     queryKey: ["task", taskId],
     queryFn: async () => {
       const res = await api.get<TaskDetailResponse>(`/tasks/${taskId}`);
@@ -25,15 +28,16 @@ export default function TaskDetailPage() {
   if (isError || !task) return <p>Erreur lors du récupération de la tâche</p>;
 
   return (
-    <div className="container mx-auto border">
-      {error ?? <p>Message d'erreur : {error}</p>}
-      <h1>Titre: {task.title}</h1>
-      <p>Description : {task.description}</p>
-      <p>Branche : {task.branche}</p>
-      <p>Date de création : {task.createdAt}</p>
-      <p>Date d'update : {task.updatedAt}</p>
-      <p>Projet : {task.project}</p>
-      <p>Status: {task.status}</p>
+    <div className="flex flex-col container mx-auto p-5 mt-5 w-200 border border-slate-200 rounded-3xl">
+      <TaskTitle title={task.title} statusId={task.statusId} />
+
+      <div className="flex justify-between my-3 items-center">
+        <DisplayProject title={task.project} />
+        <StatusBadge id={task.statusId} title={task.status} />
+        <DisplayBranche branche={task.branche} />
+      </div>
+
+      <DisplayDescription description={task.description} />
     </div>
   );
 }

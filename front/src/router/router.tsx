@@ -13,6 +13,7 @@ import ProjectDetailComponent from "../pages/Project/ProjectDetailComponent";
 import ProjectPage from "../pages/Project/ProjectPage";
 import TaskDetailPage from "../pages/Task/TaskDetailPage";
 import TaskPage from "../pages/Task/TaskPage";
+import TaskForm from "../pages/Task/FormTask";
 
 const rootRoute = createRootRoute({
   component: RootLayout,
@@ -61,6 +62,12 @@ export const taskDetailRoute = createRoute({
   component: TaskDetailPage,
 });
 
+export const taskCreate = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/tasks/create",
+  component: TaskForm,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
@@ -69,6 +76,7 @@ const routeTree = rootRoute.addChildren([
   projectDetailRoute,
   taskRoute,
   taskDetailRoute,
+  taskCreate,
 ]);
 
 export const router = createRouter({

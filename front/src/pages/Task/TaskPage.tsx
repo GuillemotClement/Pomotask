@@ -1,12 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Link, useNavigate } from "@tanstack/react-router";
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useMemo } from "react";
+import { CirclePlus, Trash } from "lucide-react";
 import { api } from "../../libs/axios";
 
 type Task = {
@@ -37,6 +37,7 @@ type TaskResponse = {
 
 export default function TaskPage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const {
     data: tasks = [],
@@ -61,58 +62,80 @@ export default function TaskPage() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (taskId: number) => {
+      return await api.delete(`/tasks/${taskId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      navigate({ to: "/tasks" });
+    },
+    onError: (err) => {
+      console.error("Failed to delete task : ", err);
+    },
+  });
+
   const columnHelper = createColumnHelper<Task>();
 
-  const columns = useMemo(
-    () => [
-      columnHelper.accessor("id", {
-        header: "ID",
-        cell: (info) => info.getValue(),
-      }),
-      columnHelper.accessor("title", {
-        header: "Nom",
-        cell: (info) => <span className="font-bold">{info.getValue()}</span>,
-      }),
-      columnHelper.accessor("branche", {
-        header: "Branche",
-        cell: (info) => info.getValue() || "",
-      }),
-      columnHelper.accessor("project", {
-        header: "Projet",
-        cell: (info) => info.getValue() || "Autre",
-      }),
-      columnHelper.accessor("createdAt", {
-        header: "Date de création",
-        cell: (info) => info.getValue(),
-      }),
-      columnHelper.accessor("statusId", {
-        header: "Status",
-        cell: (info) => {
-          const currentStatusId = info.getValue();
+  const columns = [
+    columnHelper.accessor("title", {
+      header: "Nom",
+      cell: (info) => <span className="font-bold">{info.getValue()}</span>,
+    }),
+    columnHelper.accessor("project", {
+      header: "Projet",
+      cell: (info) => info.getValue() || "Autre",
+    }),
+    columnHelper.accessor("branche", {
+      header: "Branche",
+      cell: (info) => info.getValue() || "",
+    }),
+    columnHelper.accessor("createdAt", {
+      header: "Date de création",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("statusId", {
+      header: "Status",
+      cell: (info) => {
+        const currentStatusId = info.getValue();
 
-          return (
-            <select
-              className="bg-white border border-gray-300 rounded px-2 py-1 outline-none"
-              value={currentStatusId}
-              // Empêche de naviguer vers la page détail quand on clique sur le select
-              onClick={(e) => e.stopPropagation()}
-              // Pour l'instant on se contente d'afficher, on peut logger le changement
-              onChange={(e) =>
-                console.log("Nouveau status ID:", e.target.value)
-              }
-            >
-              {taskStatus.map((status) => (
-                <option value={status.id} key={status.id}>
-                  {status.title}
-                </option>
-              ))}
-            </select>
-          );
-        },
-      }),
-    ],
-    [taskStatus, columnHelper],
-  );
+        return (
+          <select
+            className="bg-white border border-gray-300 rounded px-2 py-1 outline-none"
+            value={currentStatusId}
+            // Empêche de naviguer vers la page détail quand on clique sur le select
+            onClick={(e) => e.stopPropagation()}
+            // Pour l'instant on se contente d'afficher, on peut logger le changement
+            onChange={(e) => console.log("Nouveau status ID:", e.target.value)}
+          >
+            {taskStatus.map((status) => (
+              <option value={status.id} key={status.id}>
+                {status.title}
+              </option>
+            ))}
+          </select>
+        );
+      },
+    }),
+    columnHelper.display({
+      id: "actions",
+      header: "Actions",
+      cell: (info) => (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            if (confirm("Confirmer la supression du projet.")) {
+              deleteMutation.mutate(info.row.original.id);
+            }
+          }}
+          className="text-red-500 hover:text-red-700 font-medium"
+          type="button"
+        >
+          <Trash />
+        </button>
+      ),
+    }),
+  ];
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -122,15 +145,19 @@ export default function TaskPage() {
   });
 
   return (
-    <div className="container border mx-auto">
-      <h2>Mes tâches</h2>
-
+    <div className="container mx-auto">
       {isLoading && <p>Chargement des données ...</p>}
       {isError && (
         <p>
           Erreur lors de la récupération des tâches : {(error as any).message}
         </p>
       )}
+
+      <div className="">
+        <Link to="/tasks/create">
+          <CirclePlus />
+        </Link>
+      </div>
 
       <div className="mt-8 border rounded-lg overflow-hidden">
         <table className="w-full text-left border-collapse">
