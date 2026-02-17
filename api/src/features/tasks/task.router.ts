@@ -9,6 +9,11 @@ taskRouteur.get("/:taskId", authMiddleware, taskController.getById);
 taskRouteur.patch("/:taskId", authMiddleware, taskController.getById); // TODO: add validatio avec Zod
 taskRouteur.post("/", authMiddleware, taskController.create); // TODO: add validatio avec Zod
 taskRouteur.delete("/:taskId", authMiddleware, taskController.delete);
+taskRouteur.patch(
+	"/update-status/:taskId",
+	authMiddleware,
+	taskController.updateStatus,
+);
 // app.get("/api/tasks/:projectId", authMiddleware, async (c) => {
 //   const userId = getUserId(c);
 //   const projectId = Number(c.req.param("projectId"));
